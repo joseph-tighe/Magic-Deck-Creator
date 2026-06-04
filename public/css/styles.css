@@ -1,0 +1,210 @@
+:root {
+    --bg-body: #0d1117;
+    --bg-surface: #161b22;
+    --bg-elevated: #1c2333;
+    --bg-input: #0d1117;
+    --border: #30363d;
+    --border-focus: #58a6ff;
+    --text-primary: #f0f6fc;
+    --text-secondary: #8b949e;
+    --text-muted: #484f58;
+    --accent: #4b8bbe;
+    --accent-hover: #5f9fd0;
+    --card-image-bg: #1c2333;
+    --radius: 8px;
+    --radius-sm: 6px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+header {
+    background: var(--bg-surface);
+    padding: 1.2rem 2rem;
+    border-bottom: 2px solid var(--border);
+}
+
+header h1 {
+    font-size: 1.5rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.search-section {
+    margin-bottom: 2rem;
+}
+
+.search-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-bar input:focus {
+    border-color: var(--border-focus);
+}
+
+.search-bar button {
+    padding: 0.75rem 1.5rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.search-bar button:hover {
+    background: var(--accent-hover);
+}
+
+.filters {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.filters select {
+    padding: 0.5rem 0.75rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.filters select:focus {
+    border-color: var(--border-focus);
+}
+
+.deck-builder {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.results h2,
+.deck-list h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.card-placeholder {
+    background: var(--bg-surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition:
+        border-color 0.2s,
+        transform 0.2s;
+}
+
+.card-placeholder:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.card-image {
+    height: 140px;
+    background: var(--card-image-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.card-info {
+    padding: 0.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.card-cost {
+    font-size: 0.8rem;
+    background: var(--bg-elevated);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+.deck-list {
+    background: var(--bg-surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    position: sticky;
+    top: 1rem;
+}
+
+.deck-cards {
+    list-style: none;
+    margin-bottom: 1rem;
+    min-height: 200px;
+}
+
+.deck-empty {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.deck-summary {
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem;
+}
+
+.deck-count {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}

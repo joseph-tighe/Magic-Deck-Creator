@@ -1,1 +1,79 @@
-test
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Magic Deck Maker</title>
+        <link rel="stylesheet" href="/css/styles.css" />
+    </head>
+    <body>
+        <header>
+            <h1>Magic Deck Maker</h1>
+        </header>
+
+        <main>
+            <section class="search-section">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for a card..." />
+                    <button id="search-for-card">Search</button>
+                </div>
+                <div class="filters">
+                    <select>
+                        <option>All Colors</option>
+                        <option>White</option>
+                        <option>Blue</option>
+                        <option>Black</option>
+                        <option>Red</option>
+                        <option>Green</option>
+                        <option>Colorless</option>
+                    </select>
+                    <select>
+                        <option>All Types</option>
+                        <option>Creature</option>
+                        <option>Sorcery</option>
+                        <option>Instant</option>
+                        <option>Enchantment</option>
+                        <option>Artifact</option>
+                        <option>Planeswalker</option>
+                        <option>Land</option>
+                    </select>
+                    <select>
+                        <option>Any Mana Cost</option>
+                        <option>0-1</option>
+                        <option>2-3</option>
+                        <option>4-5</option>
+                        <option>6+</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="deck-builder">
+                <div class="results">
+                    <h2>Search Results</h2>
+                    <div class="card-grid">
+                        <div class="card-placeholder">
+                            <div class="card-image">Card Art</div>
+                            <div class="card-info">
+                                <span class="card-name">Card Name</span>
+                                <span class="card-cost">1W</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="deck-list">
+                    <h2>Your Deck (0)</h2>
+                    <ul class="deck-cards">
+                        <li class="deck-empty">
+                            No cards added yet. Search above to find cards.
+                        </li>
+                    </ul>
+                    <div class="deck-summary">
+                        <div class="deck-count">Cards: 0</div>
+                    </div>
+                </aside>
+            </section>
+        </main>
+        <script src="../js/main.js"></script>
+    </body>
+</html>
