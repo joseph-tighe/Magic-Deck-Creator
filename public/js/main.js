@@ -1,5 +1,4 @@
 document.getElementById("search-for-card").addEventListener("click", () => {
-  console.log("search-for-card clicked");
   document.getElementById("search-for-card").disabled = true;
   searchValue = document
     .getElementsByClassName("search-bar")[0]
@@ -9,7 +8,6 @@ document.getElementById("search-for-card").addEventListener("click", () => {
     fetch(`https://api.magicthegathering.io/v1/cards?name=${searchValue}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("data", data);
         if (data.cards && data.cards.length > 0) {
           const card = data.cards[0];
           document.getElementsByClassName("card-grid")[0].innerHTML +=
@@ -22,4 +20,24 @@ document.getElementById("search-for-card").addEventListener("click", () => {
       });
   }
 });
-document.getElementById("");
+document
+  .getElementsByClassName("search-bar")[0]
+  .getElementsByTagName("input")[0]
+  .addEventListener("input", () => {
+    searchValue = document
+      .getElementsByClassName("search-bar")[0]
+      .getElementsByTagName("input")[0].value;
+    console.log("searchValue", searchValue);
+    if (searchValue) {
+      fetch(`https://api.magicthegathering.io/v1/cards?name=${searchValue}`)
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementsByClassName("results")[0].innerHTML =
+            data.cards && data.cards.length > 0
+              ? data.cards[0].name
+              : "No results found";
+        });
+    } else {
+      document.getElementsByClassName("results")[0].innerHTML = "";
+    }
+  });
