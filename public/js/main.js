@@ -1,5 +1,6 @@
 document.getElementById("search-for-card").addEventListener("click", () => {
   console.log("search-for-card clicked");
+  document.getElementById("search-for-card").disabled = true;
   searchValue = document
     .getElementsByClassName("search-bar")[0]
     .getElementsByTagName("input")[0].value;
@@ -14,16 +15,11 @@ document.getElementById("search-for-card").addEventListener("click", () => {
           document.getElementsByClassName("card-grid")[0].innerHTML +=
             `<div class="card-placeholder">
               <img class="card-image" src="${card.imageUrl}" alt="${card.name}">
-              <div class="card-info">
-                  <span class="card-name">${card.name}</span>
-                  <span class="card-cost">${card.cost}</span>
-                  <span class="card-type">${card.type}</span>
-              </div>
+
           </div>`;
-          document.getElementById("card-type").textContent = card.type;
-          document.getElementById("card-text").textContent = card.text;
-          document.getElementById("card-image").src = card.imageUrl;
+          document.getElementById("search-for-card").disabled = false;
         }
       });
   }
 });
+document.getElementById("");

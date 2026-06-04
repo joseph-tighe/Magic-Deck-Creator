@@ -108,16 +108,8 @@ main {
 .filters select:focus {
     border-color: var(--border-focus);
 }
-
-.deck-builder {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 1.5rem;
-    align-items: start;
-}
-
 .results h2,
-.deck-list h2 {
+.deck h2 {
     font-size: 1.1rem;
     margin-bottom: 1rem;
     color: var(--text-secondary);
@@ -127,15 +119,23 @@ main {
 
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 1rem;
 }
 
 .card-placeholder {
-    background: var(--bg-surface);
+    background-color: var(--card-image-bg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     border: 2px solid var(--border);
     border-radius: var(--radius);
-    overflow: hidden;
+    aspect-ratio: 5 / 7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
     transition:
         border-color 0.2s,
         transform 0.2s;
@@ -146,65 +146,9 @@ main {
     transform: translateY(-2px);
 }
 
-.card-image {
-    height: 140px;
-    background: var(--card-image-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
-.card-info {
-    padding: 0.6rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.card-name {
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.card-cost {
-    font-size: 0.8rem;
-    background: var(--bg-elevated);
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    color: var(--text-secondary);
-    font-weight: 700;
-}
-
-.deck-list {
-    background: var(--bg-surface);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem;
-    position: sticky;
-    top: 1rem;
-}
-
-.deck-cards {
-    list-style: none;
-    margin-bottom: 1rem;
-    min-height: 200px;
-}
-
-.deck-empty {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    text-align: center;
-    padding: 2rem 0;
-}
-
-.deck-summary {
-    border-top: 1px solid var(--border);
-    padding-top: 0.75rem;
-}
-
-.deck-count {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+.card-placeholder img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
