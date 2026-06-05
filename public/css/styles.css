@@ -13,6 +13,7 @@
     --card-image-bg: #1c2333;
     --radius: 8px;
     --radius-sm: 6px;
+    --error: #ff0000;
 }
 
 * {
@@ -152,4 +153,9 @@ main {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+.cant-place {
+    border-color: var(--text-muted);
+    transform: translateY(-2px);
+    box-shadow: 0 0 5px var(--error);
 }
