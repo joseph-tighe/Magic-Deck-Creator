@@ -46,27 +46,6 @@ document.getElementById("search-for-card").addEventListener("click", () => {
       });
   }
 });
-document
-  .getElementsByClassName("search-bar")[0]
-  .getElementsByTagName("input")[0]
-  .addEventListener("input", () => {
-    searchValue = document
-      .getElementsByClassName("search-bar")[0]
-      .getElementsByTagName("input")[0].value;
-    console.log("searchValue", searchValue);
-    if (searchValue) {
-      fetch(`https://api.magicthegathering.io/v1/cards?name=${searchValue}`)
-        .then((response) => response.json())
-        .then((data) => {
-          document.getElementsByClassName("results")[0].innerHTML =
-            data.cards && data.cards.length > 0
-              ? data.cards[0].name
-              : "No results found";
-        });
-    } else {
-      document.getElementsByClassName("results")[0].innerHTML = "";
-    }
-  });
 function countMana() {
   var manaCount = {
     W: 0,
@@ -153,4 +132,52 @@ function getCost(card) {
     }
   }
   return manaCost;
+}
+
+
+
+
+document
+  .getElementsByClassName("search-bar")[0]
+  .getElementsByTagName("input")[0]
+  .addEventListener("input", () => {
+    interval = Loading(document.getElementsByClassName("results")[0]);
+    searchValue = document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value;
+
+    if (searchValue && searchValue.length > 2) {
+      fetch(`https://api.magicthegathering.io/v1/cards?name=${searchValue}`)
+        .then((response) => response.json())
+        .then((data) => {
+          clearInterval(interval);
+          if (searchValue == document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value) {
+            document.getElementsByClassName("results")[0].innerHTML =
+              data.cards && data.cards.length > 0
+                ? data.cards[0].name
+                : "No results found";
+            console.log(searchValue);
+          } else {
+            console.log("searchValue", searchValue);
+          }
+      });
+    } else {
+      document.getElementsByClassName("results")[0].innerHTML = "";
+    }
+  });
+loadings = [];
+async function Loading(element) {
+  element.innerHTML = "";
+  for (let i = 0; i < loadings.length; i++) {
+    clearInterval(loadings[i]);
+  }
+  var interval = setInterval(() => {
+    if (element.innerHTML.length > 3) {
+      clearInterval(interval);
+    }
+    element.innerHTML += ".";
+    if (element.innerHTML.includes("....")) {
+      element.innerHTML = "";
+    }
+  }, 500);
+  loadings.push(interval);
+  return interval;
 }
