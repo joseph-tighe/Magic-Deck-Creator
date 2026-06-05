@@ -1,9 +1,4 @@
-/*interface Card {
-  name: string;
-  imageUrl: string;
-  manaCost: string;
-  type: string;
-}*/
+var loadings = [];
 var cards = [];
 document.getElementById("search-for-card").addEventListener("click", () => {
   document.getElementById("search-for-card").disabled = true;
@@ -11,7 +6,7 @@ document.getElementById("search-for-card").addEventListener("click", () => {
     .getElementsByClassName("search-bar")[0]
     .getElementsByTagName("input")[0].value;
   if (searchValue) {
-    fetch(`https://api.magicthegathering.io/v1/cards?name=${searchValue}`)
+    fetch(searchURL(searchValue))
       .then((response) => response.json())
       .then((data) => {
         if (data.cards && data.cards.length > 0) {
@@ -133,37 +128,35 @@ function getCost(card) {
   }
   return manaCost;
 }
-
-
-
-
-document
-  .getElementsByClassName("search-bar")[0]
-  .getElementsByTagName("input")[0]
-  .addEventListener("input", () => {
-    interval = Loading(document.getElementsByClassName("results")[0]);
-    searchValue = document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value;
-
-    if (searchValue && searchValue.length > 2) {
-      fetch(`https://api.magicthegathering.io/v1/cards?name=${searchValue}`)
-        .then((response) => response.json())
-        .then((data) => {
-          clearInterval(interval);
-          if (searchValue == document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value) {
-            document.getElementsByClassName("results")[0].innerHTML =
-              data.cards && data.cards.length > 0
-                ? data.cards[0].name
-                : "No results found";
-            console.log(searchValue);
-          } else {
-            console.log("searchValue", searchValue);
-          }
-      });
-    } else {
-      document.getElementsByClassName("results")[0].innerHTML = "";
+function searchURL(searchValue) {
+  baseURL = `https://api.magicthegathering.io/v1/cards?name=${searchValue}`;
+  document.getElementById("colors").value != "All Colors" ? baseURL += `&colorIdentity=${document.getElementById("colors").value[0]}` : "";
+  document.getElementById("types").value != "All Types" ? baseURL += `&types=${document.getElementById("types").value}` : "";
+  document.getElementById("mana-cost").value != "Any Mana Cost" && document.getElementById("types").value != "Land" ? baseURL += `&manaCost=${document.getElementById("mana-cost").value}` : "";
+  return baseURL;
+}
+function updateSearchResults() {
+  let interval = Loading(document.getElementsByClassName("results")[0]);
+  let searchValue = document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value;
+  if (searchValue && searchValue.length > 2) {
+    fetch(searchURL(searchValue))
+    .then((response) => response.json())
+    .then((data) => {
+      clearInterval(interval);
+      if (searchValue == document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value) {
+        document.getElementsByClassName("results")[0].innerHTML =
+          data.cards && data.cards.length > 0
+          ? data.cards[0].name
+          : "No results found";
+      }
+     });
+  } else {
+    for (let i = 0; i < loadings.length; i++) {
+      clearInterval(loadings[i]);
     }
-  });
-loadings = [];
+    document.getElementsByClassName("results")[0].innerHTML = "";
+  }
+}
 async function Loading(element) {
   element.innerHTML = "";
   for (let i = 0; i < loadings.length; i++) {
@@ -181,3 +174,11 @@ async function Loading(element) {
   loadings.push(interval);
   return interval;
 }
+
+document
+  .getElementsByClassName("search-bar")[0]
+  .getElementsByTagName("input")[0]
+  .addEventListener("input", updateSearchResults);
+document.getElementById("colors").addEventListener("change", updateSearchResults);
+document.getElementById("types").addEventListener("change", updateSearchResults);
+document.getElementById("mana-cost").addEventListener("change", updateSearchResults);

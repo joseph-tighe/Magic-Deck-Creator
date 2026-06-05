@@ -159,3 +159,8 @@ main {
     transform: translateY(-2px);
     box-shadow: 0 0 5px var(--error);
 }
+[disabled] {
+    pointer-events: none;
+    opacity: 0;
+    cursor: not-allowed;
+}
