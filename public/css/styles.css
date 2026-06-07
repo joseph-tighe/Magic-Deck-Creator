@@ -45,6 +45,15 @@ main {
     max-width: 1200px;
     margin: 0 auto;
     padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+main > .search-section,
+main > .mana-distribution {
+    grid-column: 1 / -1;
 }
 
 .search-section {
@@ -170,23 +179,92 @@ canvas {
     height: 20px;
     border: 2px solid var(--border);
 }
-.recomendation::after {
-    position: absolute;
-    content: " ";
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
-    background-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet, red, orange, yellow, green, blue, indigo, violet),
-        linear-gradient(0deg, black, black);
-    filter: blur(6px);
-    background-size: 400% 100%;  /* Only 200% on X-axis */
-    background-position: 0% 0%;  /* Add initial position */
-    display: block;
-    z-index: -1;  /* Change to positive so it's visible */
+.recomendations {
+    background: var(--bg-surface);
+    border: 2px solid var(--border);
     border-radius: var(--radius);
-    animation: gradient 5s linear infinite;
-    transition: animation-duration 3s;
+    padding: 1rem;
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+}
+
+.recomendations h2 {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.land-recomendation,
+.creature-recomendation {
+    margin-bottom: 1.25rem;
+}
+
+.land-recomendation:last-child,
+.creature-recomendation:last-child {
+    margin-bottom: 0;
+}
+
+.land-recomendation h3,
+.creature-recomendation h3 {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+}
+
+.recomendation-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.recomendation-card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.2s;
+    cursor: pointer;
+}
+
+.recomendation-card:hover {
+    border-color: var(--accent);
+}
+
+.recomendation-card .card-art {
+    width: 32px;
+    height: 44.8px;
+    background: var(--card-image-bg);
+    border-radius: 3px;
+    flex-shrink: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.recomendation-card .card-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    flex: 1;
+}
+
+.recomendation-card .card-cost {
+    font-size: 0.75rem;
+    background: var(--bg-body);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    color: var(--text-secondary);
+    font-weight: 700;
 }
 
 @keyframes gradient {

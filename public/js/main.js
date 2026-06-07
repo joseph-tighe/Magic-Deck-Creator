@@ -31,7 +31,7 @@ document.getElementById("search-for-card").addEventListener("click", () => {
           cards.push(cardData);
 
           document.getElementsByClassName("card-grid")[0].innerHTML +=
-            `<div class="card-placeholder recomendation">
+            `<div class="card-placeholder">
               <img class="card-image" src="${card.imageUrl}" alt="${card.name}">
 
           </div>`;
@@ -39,6 +39,7 @@ document.getElementById("search-for-card").addEventListener("click", () => {
         }
         updateCardGrid();
         updateManaDistribution();
+        basicLandRecomendation();
       });
   }
 });
@@ -103,6 +104,19 @@ function compareCosts(cost1, cost2) {
   }
   return cost1["A"] <= Diff;
 }
+function whichCosts(cost1, cost2) {
+  //A stands for Any
+  //cost2 has not A
+  var Diff = 0;
+  for (let color in cost2) { //iterates through each color
+    if (cost1[color] > cost2[color]) {
+      return color;
+    } else {
+      Diff += cost2[color] - cost1[color];
+    }
+  }
+  return cost1["A"] > Diff ? "A" : "";
+}
 function getCost(card) {
   manaCost = {
     W: 0,
@@ -134,6 +148,10 @@ function searchURL(searchValue) {
   document.getElementById("colors").value != "All Colors" ? baseURL += `&colorIdentity=${document.getElementById("colors").value[0]}` : "";
   document.getElementById("types").value != "All Types" ? baseURL += `&types=${document.getElementById("types").value}` : "";
   document.getElementById("mana-cost").value != "Any Mana Cost" && document.getElementById("types").value != "Land" ? baseURL += `&manaCost=${document.getElementById("mana-cost").value}` : "";
+  return baseURL;
+}
+function basicSearchURL(searchValue) {
+  baseURL = `https://api.magicthegathering.io/v1/cards?name="${searchValue}"`;
   return baseURL;
 }
 function updateSearchResults() {
@@ -212,3 +230,38 @@ document
 document.getElementById("colors").addEventListener("change", updateSearchResults);
 document.getElementById("types").addEventListener("change", updateSearchResults);
 document.getElementById("mana-cost").addEventListener("change", updateSearchResults);
+
+async function basicLandRecomendation() {
+  for (let card of cards) {
+    if (card.type != "Land") {
+      var cardManaCost = getCost(card);
+      if (!compareCosts(cardManaCost, countMana())) {
+        expensive = whichCosts(cardManaCost, countMana());
+        landHash = {
+          W: "Plains",
+          U: "Island",
+          B: "Swamp",
+          R: "Mountain",
+          G: "Forest",
+          A: "Plains",
+        };
+        x = await fetch(basicSearchURL(landHash[expensive]))
+          .then((response) => response.json())
+          .then((data) => data.cards[0].imageUrl);
+        document
+          .getElementsByClassName("recomendation-grid")[0]
+          .innerHTML = `<div class="recomendation-card">
+            <div class="card-art" style="background-image: url(${x});"></div>
+            <div class="card-name">${landHash[expensive]}</div>
+            <div class="card-cost">${card.manaCost}</div>
+          </div>`;
+        document.getElementsByClassName("recomendation-card")[0].addEventListener("click", () => {
+          temp = document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value;
+          document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value = '"'+landHash[expensive]+'"';
+          document.getElementById("search-for-card").click();
+          document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value = temp;
+        });
+      }
+    }
+  }
+}
