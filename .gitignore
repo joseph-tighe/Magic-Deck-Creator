@@ -2,3 +2,4 @@
 deck.json
 model.keras
 model.h5
+*.keras
