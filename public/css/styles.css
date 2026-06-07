@@ -126,6 +126,7 @@ main {
 }
 
 .card-placeholder {
+    position: relative;
     background-color: var(--card-image-bg);
     background-size: contain;
     background-repeat: no-repeat;
@@ -163,4 +164,36 @@ main {
     pointer-events: none;
     opacity: 0;
     cursor: not-allowed;
+}
+canvas {
+    width: 100%;
+    height: 20px;
+    border: 2px solid var(--border);
+}
+.recomendation::after {
+    position: absolute;
+    content: " ";
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet, red, orange, yellow, green, blue, indigo, violet),
+        linear-gradient(0deg, black, black);
+    filter: blur(6px);
+    background-size: 400% 100%;  /* Only 200% on X-axis */
+    background-position: 0% 0%;  /* Add initial position */
+    display: block;
+    z-index: -1;  /* Change to positive so it's visible */
+    border-radius: var(--radius);
+    animation: gradient 5s linear infinite;
+    transition: animation-duration 3s;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 0%;
+    }
 }

@@ -31,13 +31,14 @@ document.getElementById("search-for-card").addEventListener("click", () => {
           cards.push(cardData);
 
           document.getElementsByClassName("card-grid")[0].innerHTML +=
-            `<div class="card-placeholder">
+            `<div class="card-placeholder recomendation">
               <img class="card-image" src="${card.imageUrl}" alt="${card.name}">
 
           </div>`;
           document.getElementById("search-for-card").disabled = false;
         }
         updateCardGrid();
+        updateManaDistribution();
       });
   }
 });
@@ -174,7 +175,36 @@ async function Loading(element) {
   loadings.push(interval);
   return interval;
 }
-
+function updateManaDistribution() {
+  var manaCount = countMana();
+  var landCount = 0;
+  for (let card of cards) {
+    if (card.type == "Land") {
+      landCount++;
+    }
+  }
+  document.getElementsByClassName("land-distribution")[0].innerHTML = `<p>Land Count: ${landCount}</p>`;
+  document.getElementsByClassName("total-cards")[0].innerHTML = `<p>Total Cards: ${cards.length}</p>`;
+  graph = document.getElementsByClassName("mana-distribution")[0].getElementsByTagName("canvas")[0];
+  const ctx = graph.getContext("2d");
+  ctx.clearRect(0, 0, graph.width, graph.height);
+  ctx.beginPath();
+  colorMap = {
+    W: "#ffffff",
+    U: "#0000ff",
+    B: "#000000",
+    R: "#ff0000",
+    G: "#00ff00",
+    A: "#aaaaaa",
+  };
+  last = 0;
+  for (let color in manaCount) {
+    console.log(color, manaCount[color] / landCount);
+    ctx.fillStyle = colorMap[color];
+    ctx.fillRect(last, 0, (manaCount[color] / landCount) * graph.width, graph.height);
+    last += (manaCount[color] / landCount) * graph.width;
+  }
+}
 document
   .getElementsByClassName("search-bar")[0]
   .getElementsByTagName("input")[0]
