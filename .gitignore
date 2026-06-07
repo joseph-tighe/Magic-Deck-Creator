@@ -1,2 +1,4 @@
 /node_modules
 deck.json
+model.keras
+model.h5

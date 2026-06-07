@@ -22,6 +22,18 @@ model = Sequential([
     Dense(512, activation='relu', input_shape=(input_dim,)),
     BatchNormalization(),
     Dropout(0.3),
+    Dense(1024, activation='relu'),
+    BatchNormalization(),
+    Dropout(0.3),
+    Dense(2049, activation='relu'),
+    BatchNormalization(),
+    Dropout(0.3),
+    Dense(1024, activation='relu'),
+    BatchNormalization(),
+    Dropout(0.3),
+    Dense(512, activation='relu'),
+    BatchNormalization(),
+    Dropout(0.3),
 
     Dense(256, activation='relu'),
     BatchNormalization(),
@@ -58,7 +70,7 @@ Plan:
 # split into train and test
 with open("deck.json", "r") as f:
     decks = json.load(f)
-    train_decks = decks[:int(len(decks)*0.8)]
+    train_decks = decks[:int(len(decks)*1)]
     test_decks = decks[int(len(decks)*0.8):]
 
 # remove 1 card from each deck then shuffle
@@ -144,6 +156,6 @@ X_test, Y_test = build_dataset(test_decks)
 
 model.fit(X_train, Y_train, epochs=10, batch_size=32, validation_data=(X_test, Y_test))
 
-model.save("model.h5")
+model.save("model.keras")
 
 
