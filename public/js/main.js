@@ -217,7 +217,6 @@ function updateManaDistribution() {
   };
   last = 0;
   for (let color in manaCount) {
-    console.log(color, manaCount[color] / landCount);
     ctx.fillStyle = colorMap[color];
     ctx.fillRect(last, 0, (manaCount[color] / landCount) * graph.width, graph.height);
     last += (manaCount[color] / landCount) * graph.width;
@@ -230,38 +229,88 @@ document
 document.getElementById("colors").addEventListener("change", updateSearchResults);
 document.getElementById("types").addEventListener("change", updateSearchResults);
 document.getElementById("mana-cost").addEventListener("change", updateSearchResults);
-
 async function basicLandRecomendation() {
   for (let card of cards) {
     if (card.type != "Land") {
       var cardManaCost = getCost(card);
       if (!compareCosts(cardManaCost, countMana())) {
-        expensive = whichCosts(cardManaCost, countMana());
-        landHash = {
+        let expensive = whichCosts(cardManaCost, countMana());
+        let landHash = {
           W: "Plains",
           U: "Island",
           B: "Swamp",
           R: "Mountain",
-          G: "Forest",
-          A: "Plains",
+          G: "Forest"
         };
-        x = await fetch(basicSearchURL(landHash[expensive]))
-          .then((response) => response.json())
-          .then((data) => data.cards[0].imageUrl);
-        document
-          .getElementsByClassName("recomendation-grid")[0]
-          .innerHTML = `<div class="recomendation-card">
-            <div class="card-art" style="background-image: url(${x});"></div>
-            <div class="card-name">${landHash[expensive]}</div>
-            <div class="card-cost">${card.manaCost}</div>
-          </div>`;
-        document.getElementsByClassName("recomendation-card")[0].addEventListener("click", () => {
-          temp = document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value;
-          document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value = '"'+landHash[expensive]+'"';
-          document.getElementById("search-for-card").click();
-          document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value = temp;
-        });
+
+        console.log(expensive)
+        if (expensive in landHash) {
+          x = await fetch(basicSearchURL(landHash[expensive]))
+            .then((response) => response.json())
+            .then((data) => data.cards[0].imageUrl);
+
+          document
+            .getElementsByClassName("recomendation-grid")[0]
+            .innerHTML = `<div class="recomendation-card">
+              <div class="card-art" style="background-image: url(${x});"></div>
+              <div class="card-name">${landHash[expensive]}</div>
+              <div class="card-cost">${card.manaCost}</div>
+            </div>`;
+          document.getElementsByClassName("recomendation-card")[0].addEventListener("click", () => {
+            console.log((()=>{return landHash[expensive]})())
+            temp = document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value;
+            document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value = '"'+(()=>{return landHash[expensive]})()+'"';
+            document.getElementById("search-for-card").click();
+            document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value = temp;
+          });
+        }
       }
     }
   }
+}
+
+function VectorURL(card) {
+  var toughness = card.toughness;
+  var power = card.power;
+  var manaCost = card.manaCost;
+  var type = card.type;
+  var name = card.name;
+  var imageUrl = card.imageUrl;
+  //ignores mana cost for now
+  return `https://api.magicthegathering.io/v1/cards?name=${name}&toughness<=${toughness+2}&toughness>=${toughness-2}&power<=${power+2}&power>=${power-2}&types=${type}`;
+}
+async function VectorSearch(card) {
+  URL = VectorURL(card);
+  fetch(URL)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.cards && data.cards.length > 0) {
+        dist = infinity; 
+        closestCard = data.cards[0];
+        for (let possibleCard of data.cards) {
+          if (euclidDistance(card, possibleCard) < dist) {
+            dist = euclidDistance(card, possibleCard);
+            closestCard = possibleCard;
+          }
+        }
+        return closestCard;
+      } else {
+        return null;
+      }
+    });
+}
+function getPredictionVector() {
+  fetch("/api/predict/creature/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      deck: JSON.stringify(cards),
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    });
 }
