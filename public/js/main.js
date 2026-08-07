@@ -33,16 +33,28 @@ document.getElementById("search-for-card").addEventListener("click", () => {
           document.getElementsByClassName("card-grid")[0].innerHTML +=
             `<div class="card-placeholder">
               <img class="card-image" src="${card.imageUrl}" alt="${card.name}">
-
+              <button class="card-button delete"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+</svg></button>
           </div>`;
           document.getElementById("search-for-card").disabled = false;
+          for (let card of cards) {
+            cardDom = document.getElementsByClassName("card-placeholder")[cards.indexOf(card)];
+            let nameOfCard = card.name;
+            cardDom.getElementsByClassName("card-button")[0].addEventListener("click", (e)=>deleteSelf(e, nameOfCard));
+          }
         }
         updateCardGrid();
         updateManaDistribution();
         basicLandRecomendation();
       });
   }
-});
+}); 
+function deleteSelf(e, cardName) {
+  cards.splice(cards.indexOf(cards.find(card => card.name == cardName)), 1);
+  e.target.parentElement.remove();
+}
 function countMana() {
   var manaCount = {
     W: 0,
@@ -80,16 +92,16 @@ function updateCardGrid() {
         document
           .getElementsByClassName("card-grid")[0]
           .getElementsByClassName("card-placeholder")
-          [cards.indexOf(card)].classList.add("cant-place");
+        [cards.indexOf(card)].classList.add("cant-place");
       } else {
         document
           .getElementsByClassName("card-grid")[0]
           .getElementsByClassName("card-placeholder")
-          [cards.indexOf(card)].classList.remove("cant-place");
+        [cards.indexOf(card)].classList.remove("cant-place");
       }
     }
   }
-      
+
 }
 function compareCosts(cost1, cost2) {
   //A stands for Any
@@ -159,16 +171,16 @@ function updateSearchResults() {
   let searchValue = document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value;
   if (searchValue && searchValue.length > 2) {
     fetch(searchURL(searchValue))
-    .then((response) => response.json())
-    .then((data) => {
-      clearInterval(interval);
-      if (searchValue == document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value) {
-        document.getElementsByClassName("results")[0].innerHTML =
-          data.cards && data.cards.length > 0
-          ? data.cards[0].name
-          : "No results found";
-      }
-     });
+      .then((response) => response.json())
+      .then((data) => {
+        clearInterval(interval);
+        if (searchValue == document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value) {
+          document.getElementsByClassName("results")[0].innerHTML =
+            data.cards && data.cards.length > 0
+              ? data.cards[0].name
+              : "No results found";
+        }
+      });
   } else {
     for (let i = 0; i < loadings.length; i++) {
       clearInterval(loadings[i]);
@@ -230,42 +242,49 @@ document.getElementById("colors").addEventListener("change", updateSearchResults
 document.getElementById("types").addEventListener("change", updateSearchResults);
 document.getElementById("mana-cost").addEventListener("change", updateSearchResults);
 async function basicLandRecomendation() {
+  //getMostNeededLand();
+  var creatureCost = {
+    W: 0,
+    U: 0,
+    B: 0,
+    R: 0,
+    G: 0,
+    A: 0,
+  };
   for (let card of cards) {
     if (card.type != "Land") {
-      var cardManaCost = getCost(card);
-      if (!compareCosts(cardManaCost, countMana())) {
-        let expensive = whichCosts(cardManaCost, countMana());
-        let landHash = {
-          W: "Plains",
-          U: "Island",
-          B: "Swamp",
-          R: "Mountain",
-          G: "Forest"
-        };
-
-        console.log(expensive)
-        if (expensive in landHash) {
-          x = await fetch(basicSearchURL(landHash[expensive]))
-            .then((response) => response.json())
-            .then((data) => data.cards[0].imageUrl);
-
-          document
-            .getElementsByClassName("recomendation-grid")[0]
-            .innerHTML = `<div class="recomendation-card">
-              <div class="card-art" style="background-image: url(${x});"></div>
-              <div class="card-name">${landHash[expensive]}</div>
-              <div class="card-cost">${card.manaCost}</div>
-            </div>`;
-          document.getElementsByClassName("recomendation-card")[0].addEventListener("click", () => {
-            console.log((()=>{return landHash[expensive]})())
-            temp = document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value;
-            document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value = '"'+(()=>{return landHash[expensive]})()+'"';
-            document.getElementById("search-for-card").click();
-            document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value = temp;
-          });
-        }
-      }
+      let cardManaCost = getCost(card);
+      creatureCost = addManaCost(creatureCost, cardManaCost);
     }
+  }
+  creatureCost = normalizeCost(creatureCost);
+  land = normalizeCost(countMana());
+  let expensive = biggestDifference(creatureCost, land);
+  let landHash = {
+    W: "Plains",
+    U: "Island",
+    B: "Swamp",
+    R: "Mountain",
+    G: "Forest"
+  };
+  console.log(expensive)
+  if (expensive in landHash) {
+    x = await fetch(basicSearchURL(landHash[expensive]))
+      .then((response) => response.json())
+      .then((data) => data.cards[0].imageUrl);
+    document
+      .getElementsByClassName("recomendation-grid")[0]
+      .innerHTML = `<div class="recomendation-card">
+            <div class="card-art" style="background-image: url(${x});"></div>
+            <div class="card-name">${landHash[expensive]}</div>
+          </div>`;
+    document.getElementsByClassName("recomendation-card")[0].addEventListener("click", () => {
+      console.log((() => { return landHash[expensive] })())
+      temp = document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value;
+      document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value = '"' + (() => { return landHash[expensive] })() + '"';
+      document.getElementById("search-for-card").click();
+      document.getElementsByClassName("search-bar")[0].getElementsByTagName("input")[0].value = temp;
+    });
   }
 }
 
@@ -277,7 +296,7 @@ function VectorURL(card) {
   var name = card.name;
   var imageUrl = card.imageUrl;
   //ignores mana cost for now
-  return `https://api.magicthegathering.io/v1/cards?name=${name}&toughness<=${toughness+2}&toughness>=${toughness-2}&power<=${power+2}&power>=${power-2}&types=${type}`;
+  return `https://api.magicthegathering.io/v1/cards?name=${name}&toughness<=${toughness + 2}&toughness>=${toughness - 2}&power<=${power + 2}&power>=${power - 2}&types=${type}`;
 }
 async function VectorSearch(card) {
   URL = VectorURL(card);
@@ -285,7 +304,7 @@ async function VectorSearch(card) {
     .then((response) => response.json())
     .then((data) => {
       if (data.cards && data.cards.length > 0) {
-        dist = infinity; 
+        dist = infinity;
         closestCard = data.cards[0];
         for (let possibleCard of data.cards) {
           if (euclidDistance(card, possibleCard) < dist) {
@@ -298,6 +317,41 @@ async function VectorSearch(card) {
         return null;
       }
     });
+}
+function normalizeCost(cost) {
+
+  var sum = 0;
+  for (let color in cost) {
+    sum += cost[color];
+  }
+  var newCost = JSON.parse(JSON.stringify(cost));
+  for (let color in newCost) {
+    if (sum == 0) {
+      sum = 1;
+    }
+    newCost[color] = Math.round(newCost[color] / sum * 100);
+  }
+  return newCost;
+}
+function biggestDifference(cost1, cost2) {
+  max = -101;
+  index = "";
+  for (let color in cost2) {
+    if (color != "A") {
+      if (cost1[color] - cost2[color] > max && cost1[color] != 0) {
+        max = cost1[color] - cost2[color];
+        index = color;
+      }
+    }
+  }
+  return index;
+}
+function addManaCost(cost1, cost2) {
+  newCost = JSON.parse(JSON.stringify(cost1));
+  for (let color in cost2) {
+    newCost[color] += cost2[color];
+  }
+  return newCost;
 }
 function getPredictionVector() {
   fetch("/api/predict/creature/", {
