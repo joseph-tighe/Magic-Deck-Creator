@@ -8,10 +8,11 @@ const log = require("./src/middleware/log");
 
 app.use(log);
 app.use(express.static(__dirname + "/public"));
+app.use("/public", express.static(__dirname + "/public"));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/html/index.html");
+  res.sendFile(__dirname + "/index.html");
 });
 
 const MODEL_DIR = path.join(__dirname, "public/models/creature");

@@ -8,14 +8,29 @@
     </head>
     <body>
         <header>
-            <h1>Magic Deck Maker</h1>
+            <div class="header-inner">
+                <div class="logo" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+                        <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
+                        <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+                    </svg>
+                </div>
+                <div class="title-group">
+                    <h1>Magic Deck Maker</h1>
+                    <p class="tagline">Build your perfect mana base</p>
+                </div>
+            </div>
         </header>
 
         <main>
             <section class="search-section">
                 <div class="search-bar">
-                    <input type="text" placeholder="Search for a card..." />
+                    <input type="text" placeholder="Search for a card..." autocomplete="off" />
                     <button id="search-for-card">Search</button>
+                </div>
+                <div class="search-status">
+                    <span class="results">Type at least 3 characters to preview the top match</span>
                 </div>
                 <div class="filters">
                     <select id="colors">
@@ -44,13 +59,17 @@
                         <option>4-5</option>
                         <option>6+</option>
                     </select>
-                    <span>Search Results: </span><span class="results"></span>
                 </div>
             </section>
+
             <section class="deck">
-                <h2>Your Deck</h2>
+                <div class="deck-header">
+                    <h2>Your Deck</h2>
+                    <span class="deck-count" id="deck-count">0</span>
+                </div>
                 <div class="card-grid"></div>
             </section>
+
             <section class="recomendations">
                 <h2>Recommendations</h2>
                 <div class="land-recomendation">
@@ -62,11 +81,15 @@
                     <div class="recomendation-grid"></div>
                 </div>
             </section>
+
             <section class="mana-distribution">
                 <h2>Quick Stats</h2>
-                <div class="land-distribution"></div>
+                <div class="stats-row">
+                    <div class="land-distribution"></div>
+                    <div class="total-cards"></div>
+                </div>
                 <canvas id="land-distribution"></canvas>
-                <div class="total-cards"></div>
+                <div class="mana-legend"></div>
             </section>
         </main>
         <script src="public/js/main.js"></script>
