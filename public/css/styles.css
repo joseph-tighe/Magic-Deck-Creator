@@ -200,9 +200,6 @@ main > .mana-distribution {
     background: var(--accent-hover);
 }
 
-.search-bar button:active:not(:disabled) {
-}
-
 .search-bar button:disabled {
     filter: grayscale(0.4);
     cursor: not-allowed;
