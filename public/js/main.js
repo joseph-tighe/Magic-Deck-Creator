@@ -33,6 +33,10 @@ document.getElementById("search-for-card").addEventListener("click", () => {
             imageUrl: card.imageUrl,
             manaCost: manaCost,
             type: card.types[0],
+            typeLine: card.type,
+            text: card.text || "",
+            power: card.power,
+            toughness: card.toughness,
           };
           cards.push(cardData);
           addCardToGrid(cardData);
@@ -54,6 +58,9 @@ function addCardToGrid(card) {
   var grid = document.getElementsByClassName("card-grid")[0];
   var el = document.createElement("div");
   el.className = "card-placeholder";
+  el.tabIndex = 0;
+  el.setAttribute("role", "button");
+  el.setAttribute("aria-label", "View " + card.name);
   el.innerHTML =
     `<img class="card-image" src="${card.imageUrl}" alt="${card.name}" loading="lazy">
      <div class="card-label">
@@ -63,6 +70,15 @@ function addCardToGrid(card) {
      <button class="card-button delete" title="Remove from deck">${TRASH_ICON}</button>`;
   el.querySelector(".card-name-label").textContent = card.name;
   el.querySelector(".card-cost-label").innerHTML = formatCost(card);
+  el.addEventListener("click", (e) => {
+    if (!e.target.closest(".card-button")) openCardModal(card);
+  });
+  el.addEventListener("keydown", (e) => {
+    if ((e.key === "Enter" || e.key === " ") && !e.target.closest(".card-button")) {
+      e.preventDefault();
+      openCardModal(card);
+    }
+  });
   el
     .querySelector(".card-button")
     .addEventListener("click", (e) => deleteSelf(e, card.name));
@@ -73,6 +89,46 @@ function formatCost(card) {
   if (card.type == "Land") return "Land";
   return card.manaCost.map(manaSymbolHTML).join("");
 }
+
+function openCardModal(card) {
+  var modal = document.getElementById("card-modal");
+  if (!modal) return;
+  document.getElementById("card-modal-image").src = card.imageUrl;
+  document.getElementById("card-modal-image").alt = card.name;
+  document.getElementById("card-modal-name").textContent = card.name;
+  document.getElementById("card-modal-cost").innerHTML = formatCost(card);
+  var typeEl = document.getElementById("card-modal-type");
+  var typeLine = card.typeLine || card.type || "Card";
+  if (card.power && card.toughness) {
+    typeLine += ` \u2014 ${card.power}/${card.toughness}`;
+  }
+  typeEl.textContent = typeLine;
+  var textEl = document.getElementById("card-modal-text");
+  textEl.innerHTML = formatCardText(card.text);
+  modal.hidden = false;
+  document.body.style.overflow = "hidden";
+  modal.querySelector(".card-modal-close").focus();
+}
+
+function closeCardModal() {
+  var modal = document.getElementById("card-modal");
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.style.overflow = "";
+}
+
+document
+  .getElementById("card-modal")
+  .addEventListener("click", (e) => {
+    if (e.target.closest("[data-close]")) closeCardModal();
+  });
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    var modal = document.getElementById("card-modal");
+    if (modal && !modal.hidden) closeCardModal();
+  }
+});
 
 function manaSymbolHTML(symbol) {
   symbol = String(symbol).replace("{", "").replace("}", "");
@@ -91,6 +147,8 @@ function manaSymbolHTML(symbol) {
     key = "c";
   } else if (symbol == "X") {
     key = "x";
+  } else if (symbol == "T") {
+    key = "t";
   } else if (symbol.indexOf("W") > -1) {
     key = "w";
   } else if (symbol.indexOf("U") > -1) {
@@ -102,7 +160,20 @@ function manaSymbolHTML(symbol) {
   } else if (symbol.indexOf("G") > -1) {
     key = "g";
   }
-  return `<span class="mana-symbol ms-${key}">${symbol}</span>`;
+  return `<span class="mana-symbol ms-${key}" title="Mana symbol ${symbol}">${symbol}</span>`;
+}
+
+function formatCardText(text) {
+  if (!text) return "No card text available.";
+  var escaped = String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  var formatted = escaped.replace(/\{([^}]*)\}/g, (m, s) => {
+    if (s == "T") return "tap";
+    return manaSymbolHTML(s);
+  });
+  return formatted.replace(/\n+/g, "\n\n");
 }
 
 function deleteSelf(e, cardName) {
@@ -430,6 +501,8 @@ document
 
 async function basicLandRecomendation() {
   //getMostNeededLand();
+  var reqId = (basicLandRecomendation.requestId =
+    (basicLandRecomendation.requestId || 0) + 1);
   var creatureCost = {
     W: 0,
     U: 0,
@@ -460,6 +533,7 @@ async function basicLandRecomendation() {
     var x = await fetch(basicSearchURL(landHash[expensive]))
       .then((response) => response.json())
       .then((data) => data.cards[0].imageUrl);
+    if (reqId != basicLandRecomendation.requestId) return;
     var name = landHash[expensive];
     var cardEl = document.createElement("div");
     cardEl.className = "recomendation-card";

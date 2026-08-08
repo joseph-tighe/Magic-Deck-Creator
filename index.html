@@ -19,49 +19,49 @@
                 <div class="title-group">
                     <h1>Magic Deck Maker</h1>
                 </div>
-            </div>
-        </header>
-
-        <main>
-            <section class="search-section">
                 <div class="search-bar">
                     <input type="text" placeholder="Search for a card..." autocomplete="off" />
                     <button id="search-for-card"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
   <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
 </svg></button>
                 </div>
+            </div>
+            <div class="header-row">
                 <div class="search-status">
                     <span class="results">Type at least 3 characters to preview the top match</span>
                 </div>
                 <div class="filters">
-                    <select id="colors">
-                        <option>All Colors</option>
-                        <option>White</option>
-                        <option>Blue</option>
-                        <option>Black</option>
-                        <option>Red</option>
-                        <option>Green</option>
-                        <option>Colorless</option>
-                    </select>
-                    <select id="types">
-                        <option>All Types</option>
-                        <option>Creature</option>
-                        <option>Sorcery</option>
-                        <option>Instant</option>
-                        <option>Enchantment</option>
-                        <option>Artifact</option>
-                        <option>Planeswalker</option>
-                        <option>Land</option>
-                    </select>
-                    <select id="mana-cost" disabled>
-                        <option>Any Mana Cost</option>
-                        <option>0-1</option>
-                        <option>2-3</option>
-                        <option>4-5</option>
-                        <option>6+</option>
-                    </select>
+                <select id="colors">
+                    <option>All Colors</option>
+                    <option>White</option>
+                    <option>Blue</option>
+                    <option>Black</option>
+                    <option>Red</option>
+                    <option>Green</option>
+                    <option>Colorless</option>
+                </select>
+                <select id="types">
+                    <option>All Types</option>
+                    <option>Creature</option>
+                    <option>Sorcery</option>
+                    <option>Instant</option>
+                    <option>Enchantment</option>
+                    <option>Artifact</option>
+                    <option>Planeswalker</option>
+                    <option>Land</option>
+                </select>
+                <select id="mana-cost" disabled>
+                    <option>Any Mana Cost</option>
+                    <option>0-1</option>
+                    <option>2-3</option>
+                    <option>4-5</option>
+                    <option>6+</option>
+                </select>
                 </div>
-            </section>
+            </div>
+        </header>
+
+        <main>
 
             <section class="deck">
                 <div class="deck-header">
@@ -93,6 +93,24 @@
                 <div class="mana-legend"></div>
             </section>
         </main>
+
+        <div class="card-modal" id="card-modal" hidden>
+            <div class="card-modal-backdrop" data-close></div>
+            <div class="card-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="card-modal-name">
+                <button class="card-modal-close" data-close aria-label="Close">&times;</button>
+                <div class="card-modal-body">
+                    <div class="card-modal-art">
+                        <img id="card-modal-image" alt="" />
+                    </div>
+                    <div class="card-modal-info">
+                        <h2 id="card-modal-name"></h2>
+                        <div class="card-modal-cost" id="card-modal-cost"></div>
+                        <div class="card-modal-type" id="card-modal-type"></div>
+                        <div class="card-modal-text" id="card-modal-text"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script src="public/js/main.js"></script>
     </body>
 </html>
