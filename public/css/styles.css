@@ -9,7 +9,7 @@
     --text-primary: #eef2fb;
     --text-secondary: #9dabc3;
     --text-muted: #64748c;
-    --accent: #4d9fff;
+    --accent: #215A6D;
     --accent-hover: #6fb2ff;
     --accent-soft: rgba(77, 159, 255, 0.14);
     --card-image-bg: #161d2e;
@@ -36,6 +36,29 @@ body {
     color: var(--text-primary);
     min-height: 100vh;
     line-height: 1.5;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+    pointer-events: none;
+}
+
+body::before {
+    background-image: url("../assets/IMG_1420.jpeg");
+}
+
+body::after {
+    background-image: linear-gradient(rgba(10, 14, 22, 0.62), rgba(10, 14, 22, 0.62)),
+        url("../assets/IMG_1418.jpeg");
+    z-index: -1;
+    opacity: 0.55;
 }
 
 ::selection {
@@ -122,8 +145,10 @@ main > .mana-distribution {
 /* ===== Search ===== */
 
 .search-section {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
+    background: rgba(17, 23, 37, 0.42);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: var(--radius);
     padding: 1.25rem;
     box-shadow: var(--shadow-sm);
@@ -138,9 +163,11 @@ main > .mana-distribution {
     flex: 1;
     min-width: 0;
     padding: 0.8rem 1.1rem;
-    border: 1px solid var(--border-strong);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: var(--radius-sm);
-    background: var(--bg-input);
+    background: rgba(13, 19, 32, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     color: var(--text-primary);
     font-size: 1rem;
     outline: none;
@@ -171,11 +198,9 @@ main > .mana-distribution {
 
 .search-bar button:hover:not(:disabled) {
     background: var(--accent-hover);
-    transform: translateY(-1px);
 }
 
 .search-bar button:active:not(:disabled) {
-    transform: translateY(0);
 }
 
 .search-bar button:disabled {
@@ -221,8 +246,10 @@ main > .mana-distribution {
     gap: 0.6rem;
     min-height: 46px;
     padding: 0.55rem 1rem;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
+    background: rgba(13, 19, 32, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: var(--radius-sm);
     transition: border-color 0.2s;
 }
@@ -330,8 +357,10 @@ main > .mana-distribution {
 
 .card-placeholder {
     position: relative;
-    background: var(--card-image-bg);
-    border: 1px solid var(--border);
+    background: rgba(22, 29, 46, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: var(--radius-sm);
     aspect-ratio: 5 / 7;
     overflow: hidden;
@@ -525,8 +554,10 @@ main > .mana-distribution {
 /* ===== Recommendations ===== */
 
 .recomendations {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
+    background: rgba(17, 23, 37, 0.42);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: var(--radius);
     padding: 1.1rem;
     position: sticky;
@@ -572,8 +603,10 @@ main > .mana-distribution {
     align-items: center;
     gap: 0.7rem;
     padding: 0.5rem;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
+    background: rgba(26, 34, 51, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition: border-color 0.2s, transform 0.2s, background-color 0.2s;
@@ -581,7 +614,7 @@ main > .mana-distribution {
 
 .recomendation-card:hover {
     border-color: var(--border-focus);
-    background: #1e2840;
+    background: rgba(30, 40, 64, 0.55);
     transform: translateX(2px);
 }
 
@@ -608,7 +641,9 @@ main > .mana-distribution {
 
 .recomendation-card .card-cost {
     font-size: 0.72rem;
-    background: var(--bg-body);
+    background: rgba(10, 14, 22, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     padding: 0.15rem 0.4rem;
     border-radius: 4px;
     color: var(--text-secondary);
@@ -618,8 +653,10 @@ main > .mana-distribution {
 /* ===== Quick stats ===== */
 
 .mana-distribution {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
+    background: rgba(17, 23, 37, 0.42);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: var(--radius);
     padding: 1.25rem;
     box-shadow: var(--shadow-sm);

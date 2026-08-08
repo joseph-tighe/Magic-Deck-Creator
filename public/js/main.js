@@ -409,7 +409,15 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.arcTo(x, y, x + w, y, r);
   ctx.closePath();
 }
-
+function sumbitIfEnter(e) {
+  if (e.keyCode == 13) {
+    document.getElementById("search-for-card").click();
+  }
+};
+document
+  .getElementsByClassName("search-bar")[0]
+  .getElementsByTagName("input")[0]
+  .addEventListener("keyup", sumbitIfEnter);
 document
   .getElementsByClassName("search-bar")[0]
   .getElementsByTagName("input")[0]
